@@ -115,7 +115,7 @@ by implementing `UserInfoRequestHandlerSpi` interface.
 
 In this resource server implementation, `UserInfoRequestHandlerSpiImpl` is
 an example implementation of `UserInfoRequestHandlerSpi` interface and it
-retrieves claims values from a dummy database. You need to modify the
+retrieves claim values from a dummy database. You need to modify the
 implementation to make it refer to your actual user database.
 
 
@@ -165,9 +165,10 @@ Customization
 -------------
 
 The simplest way to add a new protected resource endpoint is to create a
-subclass of `BaseResourceEndpoint` as `CountryEndpoint` does, but of course,
-it is okay for you to use `AccessTokenValidator` (in [authlete-java-jaxrs][4])
-or call `AuthleteApi.introspection(IntrospectionRequest)` API (in
+subclass of `BaseResourceEndpoint` as `CountryEndpoint` does. However,
+of course, it is okay for you to use `AccessTokenValidator` (in
+[authlete-java-jaxrs][4]) or call
+`AuthleteApi.introspection(IntrospectionRequest)` API (in
 [authlete-java-common][6]) directly.
 
 As you add new protected resource endpoints, you will want to add new scopes.

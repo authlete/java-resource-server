@@ -108,7 +108,7 @@ JSON Œ`Ž®‚à‚µ‚­‚Í [JWT][18] Œ`Ž®‚Å•Ô‚µ‚Ü‚·B ƒNƒ‰ƒCƒAƒ“ƒgƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒƒ^ƒ
 [OpenID Connect Dynamic Client Registration 1.0][22] ‚Ì [2. Client Metadata][21]
 ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 
-ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚©‚ç•Ô‚³‚ê‚éƒ†[ƒU[î•ñ‚É‚ÍAƒ†[ƒU[‚Ì[ƒNƒŒ[ƒ€][27] ‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·B
+ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚©‚ç•Ô‚³‚ê‚éƒ†[ƒU[î•ñ‚É‚ÍAƒ†[ƒU[‚Ì[ƒNƒŒ[ƒ€][27]‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·B
 Žè’Z‚ÉŒ¾‚¤‚ÆA_ƒNƒŒ[ƒ€_‚Æ‚ÍA–¼‘O‚âƒ[ƒ‹ƒAƒhƒŒƒX‚È‚Ç‚ÌAƒ†[ƒU[‚ÉŠÖ‚·‚éî•ñ‚Å‚·B
 Authlete ‚Í (OpenID Connect ‚ðƒTƒ|[ƒg‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸)
 ƒ†[ƒU[ƒf[ƒ^‚ðŠÇ—‚µ‚È‚¢‚Ì‚ÅA‚ ‚È‚½‚ªƒNƒŒ[ƒ€’l‚ð’ñ‹Ÿ‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB
@@ -134,13 +134,13 @@ Authlete ‚Í (OpenID Connect ‚ðƒTƒ|[ƒg‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸)
 
     http://localhost:8081/api/country/JP?access_token={access-token}
 
-ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚©‚ç‚Ì‰ž“š‚Í JSON ‚ÅA`{‘ƒR[ƒh}` ‚ÅŽw’è‚³‚ê‚é‘‚ÉŠÖ‚·‚éŽŸ‚Ìî•ñ‚ðŠÜ‚ñ‚Å‚¢‚Ü‚·B
+ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚©‚ç‚Ì‰ž“š‚Í JSON ‚ÅA`{‘ƒR[ƒh}` ‚ÅŽw’è‚³‚ê‚½‘‚ÉŠÖ‚·‚éŽŸ‚Ìî•ñ‚ðŠÜ‚ñ‚Å‚¢‚Ü‚·B
 
   1. ‘–¼
   2. ISO 3166-1 alpha-2 ƒR[ƒh
   3. ISO 3166-1 alpha-3 ƒR[ƒh
   4. ISO 3166-1 numeric ƒR[ƒh
-  5. Currency
+  5. ’Ê‰Ý
 
 ŽŸ‚ÉŽ¦‚·‚Ì‚Í‰ž“š—á‚Å‚·B
 
