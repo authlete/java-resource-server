@@ -103,7 +103,7 @@ JSON Œ`Ž®‚à‚µ‚­‚Í [JWT][18] Œ`Ž®‚Å•Ô‚µ‚Ü‚·B ƒNƒ‰ƒCƒAƒ“ƒgƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒƒ^ƒ
 ‚Ì—¼•û‚Æ‚àŽw’è‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎAƒ†[ƒU[î•ñ‚Í‘f‚Ì JSON ‚Å•Ô‚³‚ê‚Ü‚·B
 ‚»‚¤‚Å‚È‚¢ê‡‚ÍAƒVƒŠƒAƒ‰ƒCƒY‚³‚ê‚½ JWT ‚Å•Ô‚³‚ê‚Ü‚·B Authlete
 ‚ÍƒNƒ‰ƒCƒAƒ“ƒgƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒƒ^ƒf[ƒ^‚ðŠÇ—‚·‚é‚½‚ß‚Ì Web ƒRƒ“ƒ\[ƒ‹
-([Developer Console][19]) ‚ð’ñ‹Ÿ‚µ‚Ä‚¢‚Ü‚·B
+([ƒfƒxƒƒbƒp[EƒRƒ“ƒ\[ƒ‹][19]) ‚ð’ñ‹Ÿ‚µ‚Ä‚¢‚Ü‚·B
 ƒNƒ‰ƒCƒAƒ“ƒgƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ìƒƒ^ƒf[ƒ^‚É‚Â‚¢‚Ä‚ÍA
 [OpenID Connect Dynamic Client Registration 1.0][22] ‚Ì [2. Client Metadata][21]
 ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
@@ -129,7 +129,7 @@ Authlete ‚Í (OpenID Connect ‚ðƒTƒ|[ƒg‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸)
 
 ƒJƒ“ƒgƒŠ[ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚ÌƒpƒX‚Í `/api/country/{‘ƒR[ƒh}` ‚ÅA`{‘ƒR[ƒh}` ‚Ì•”•ª‚Í
 [ISO 3166-1 ƒR[ƒh][23]‚Å‚· ([alpha-2][24]A[alpha-3][25] ‚Ü‚½‚Í [numeric][26])B
-—á‚¦‚ÎA`JP`A`JPN`A`392` ‚Í—LŒø‚Í ISO 3166-1 ƒR[ƒh‚ÅA‚±‚ê‚ç‚Í‘S‚Ä“ú–{‚ð•\‚µ‚Ü‚·B
+—á‚¦‚ÎA`JP`A`JPN`A`392` ‚Í—LŒø‚È ISO 3166-1 ƒR[ƒh‚ÅA‚±‚ê‚ç‚Í‘S‚Ä“ú–{‚ð•\‚µ‚Ü‚·B
 ‚Å‚·‚Ì‚ÅAŽŸ‚Ì URL ‚ÍƒJƒ“ƒgƒŠ[ƒGƒ“ƒhƒ|ƒCƒ“ƒg‚É‘Î‚·‚é—LŒø‚ÈƒŠƒNƒGƒXƒg‚Å‚·B
 
     http://localhost:8081/api/country/JP?access_token={access-token}
@@ -169,7 +169,7 @@ Authlete ŒÅ—L‚Ìî•ñ‚É‚Â‚¢‚Ä‚ÍA[Authlete Definitive Guide][17] ‚Ì
 ‚ðƒR[ƒ‹‚µ‚Ä‚à‚©‚Ü‚¢‚Ü‚¹‚ñB
 
 V‚µ‚¢•ÛŒìƒŠƒ\[ƒXƒGƒ“ƒhƒ|ƒCƒ“ƒg‚ð’Ç‰Á‚·‚é‚É]‚¢AV‚µ‚¢ƒXƒR[ƒv‚ð’Ç‰Á‚µ‚½‚¢‚ÆŽv‚¤‚Å‚µ‚å‚¤B
-‚ ‚È‚½‚Ì Web API —p‚ÉV‚µ‚¢ƒXƒR[ƒv‚ð’Ç‰Á‚·‚é‚É‚ÍA[Service Owner Console][28]
+‚ ‚È‚½‚Ì Web API —p‚ÉV‚µ‚¢ƒXƒR[ƒv‚ð’Ç‰Á‚·‚é‚É‚ÍA[ƒT[ƒrƒXƒI[ƒi[EƒRƒ“ƒ\[ƒ‹][28]
 ‚ðŽg—p‚µ‚Ä‚­‚¾‚³‚¢B
 
 
