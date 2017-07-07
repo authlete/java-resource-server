@@ -1,3 +1,6 @@
 target/
 local.authlete.properties
+.settings
+.project
+.classpath
 
