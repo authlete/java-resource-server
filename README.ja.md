@@ -1,148 +1,158 @@
-���\�[�X�T�[�o�[����
+リソースサーバー実装
 ====================
 
-�T�v
+概要
 ----
 
-����̓��\�[�X�T�[�o�[�� Java �ɂ������ł��B [OpenID Connect Core 1.0][2]
-�Œ�`����Ă���[���[�U�[���G���h�|�C���g][1] ���T�|�[�g���A�܂��A[RFC 6750][3]
+これはリソースサーバーの Java による実装です。 [OpenID Connect Core 1.0][2]
+で定義されている[ユーザー情報エンドポイント][1] をサポートし、また、[RFC 6750][3]
 (The OAuth 2.0 Authorization Framework: Bearer Token Usage)
-�ɒ�`����Ă�����@�ŃA�N�Z�X�g�[�N�����󂯎��ی샊�\�[�X�G���h�|�C���g�̗���܂�ł��܂��B
+に定義されている方法でアクセストークンを受け取る保護リソースエンドポイントの例も含んでいます。
 
-���̎����� JAX-RS 2.0 API �� [authlete-java-jaxrs][4] ���C�u������p���ď�����Ă��܂��B
-JAX-RS �� _The Java API for RESTful Web Services_ �ł��B JAX-RS 2.0 API ��
-[JSR 339][5] �ŕW��������AJava EE 7 �Ɋ܂܂�Ă��܂��B ����Aauthlete-java-jaxrs
-�́A�F�T�[�o�[�ƃ��\�[�X�T�[�o�[���������邽�߂̃��[�e�B���e�B�[�N���X�Q��񋟂���I�[�v���\�[�X���C�u�����ł��B
-authlete-java-jaxrs �� [authlete-java-common][6] ���C�u�������g�p���Ă���A�������
-[Authlete Web API][7] �Ƃ��Ƃ肷�邽�߂̃I�[�v���\�[�X���C�u�����ł��B
+この実装は JAX-RS 2.0 API と [authlete-java-jaxrs][4] ライブラリを用いて書かれています。
+JAX-RS は _The Java API for RESTful Web Services_ です。 JAX-RS 2.0 API は
+[JSR 339][5] で標準化され、Java EE 7 に含まれています。 一方、authlete-java-jaxrs
+は、認可サーバーとリソースサーバーを実装するためのユーティリティークラス群を提供するオープンソースライブラリです。
+authlete-java-jaxrs は [authlete-java-common][6] ライブラリを使用しており、こちらは
+[Authlete Web API][7] とやりとりするためのオープンソースライブラリです。
 
-�N���C�A���g�A�v���P�[�V�������񎦂����A�N�Z�X�g�[�N���̗L�����𒲂ׂ邽�߁A
-���̃��\�[�X�T�[�o�[�� Authlete �T�[�o�[�ɖ₢���킹�������Ȃ��܂��B
-����͂܂�A���̃��\�[�X�T�[�o�[�́A�A�N�Z�X�g�[�N���𔭍s�����F�T�[�o�[��
-Authlete ���o�b�N�G���h�T�[�r�X�Ƃ��Ďg�p���Ă��邱�Ƃ����҂��Ă��邱�Ƃ��Ӗ����܂��B
-[java-oauth-server][8] �͂��̂悤�ȔF�T�[�o�[�̎����ł���A[OAuth 2.0][9] ��
-[OpenID Connect][10] ���T�|�[�g���Ă��܂��B
+クライアントアプリケーションが提示したアクセストークンの有効性を調べるため、
+このリソースサーバーは Authlete サーバーに問い合わせをおこないます。
+これはつまり、このリソースサーバーは、アクセストークンを発行した認可サーバーが
+Authlete をバックエンドサービスとして使用していることを期待していることを意味します。
+[java-oauth-server][8] はそのような認可サーバーの実装であり、[OAuth 2.0][9] と
+[OpenID Connect][10] をサポートしています。
 
 
-���C�Z���X
+ライセンス
 ----------
 
   Apache License, Version 2.0
 
 
-�\�[�X�R�[�h
+ソースコード
 ------------
 
   <code>https://github.com/authlete/java-resource-server</code>
 
 
-Authlete �ɂ���
+Authlete について
 -----------------
 
-[Authlete][11] (�I�[�X���[�g) �́AOAuth 2.0 & OpenID Connect
-�̎������N���E�h�Œ񋟂���T�[�r�X�ł� ([overview][12])�B Authlete
-���񋟂���f�t�H���g�������g�����Ƃɂ��A�������� [java-oauth-server][8]
-�ł����Ȃ��Ă���悤�� [Authlete Web API][7]
-��p���ĔF�T�[�o�[�������Ŏ������邱�Ƃɂ��AOAuth 2.0 �� OpenID Connect
-�̋@�\���ȒP�Ɏ����ł��܂��B
+[Authlete][11] (オースリート) は、OAuth 2.0 & OpenID Connect
+の実装をクラウドで提供するサービスです ([overview][12])。 Authlete
+が提供するデフォルト実装を使うことにより、もしくは [java-oauth-server][8]
+でおこなっているように [Authlete Web API][7]
+を用いて認可サーバーを自分で実装することにより、OAuth 2.0 と OpenID Connect
+の機能を簡単に実現できます。
 
-���̔F�T�[�o�[�̎������g���ɂ́AAuthlete ���� API
-�N���f���V�����Y���擾���A`authlete.properties` �ɐݒ肷��K�v������܂��B
-API �N���f���V�����Y���擾����菇�͂ƂĂ��ȒP�ł��B
-�P�ɃA�J�E���g��o�^���邾���ōς݂܂� ([�T�C���A�b�v][13])�B
-�ڍׂ� [Getting Started][14] ���Q�Ƃ��Ă��������B
+この認可サーバーの実装を使うには、Authlete から API
+クレデンシャルズを取得し、`authlete.properties` に設定する必要があります。
+API クレデンシャルズを取得する手順はとても簡単です。
+単にアカウントを登録するだけで済みます ([サインアップ][13])。
+詳細は [Getting Started][14] を参照してください。
 
 
-���s���@
+実行方法
 --------
 
-1. ���̃��\�[�X�T�[�o�[�̎������_�E�����[�h���܂��B
+1. このリソースサーバーの実装をダウンロードします。
 
         $ git clone https://github.com/authlete/java-resource-server.git
         $ cd java-resource-server
 
-2. �ݒ�t�@�C����ҏW���� API �N���f���V�����Y���Z�b�g���܂��B
+2. 設定ファイルを編集して API クレデンシャルズをセットします。
 
         $ vi authlete.properties
 
-3. [http://localhost:8081/][15] �Ń��\�[�X�T�[�o�[���N�����܂��B
+3. [maven][29] がインストールされていること、 `JAVA_HOME` が適切に設定されていることを確認します。
+
+4. [http://localhost:8081/][15] でリソースサーバーを起動します。
 
         $ mvn jetty:run &
 
-`java-resource-server` �� `authlete.properties` ��ݒ�t�@�C���Ƃ��ĎQ�Ƃ��܂��B
-���̃t�@�C�����g�p�������ꍇ�́A���̂悤�ɂ��̃t�@�C���̖��O���V�X�e���v���p�e�B�[
-`authlete.configuration.file` �Ŏw�肵�Ă��������B
+#### Docker を利用する
+
+Docker を利用する場合は, ステップ 2 の後に以下のコマンドを実行してください.
+
+    $ docker-compose up
+
+#### 設定ファイル
+
+`java-resource-server` は `authlete.properties` を設定ファイルとして参照します。
+他のファイルを使用したい場合は、次のようにそのファイルの名前をシステムプロパティー
+`authlete.configuration.file` で指定してください。
 
     $ mvn -Dauthlete.configuration.file=local.authlete.properties jetty:run &
 
 
-�G���h�|�C���g
+エンドポイント
 --------------
 
-���̎����́A���\�Ɏ����G���h�|�C���g�����J���܂��B
+この実装は、下表に示すエンドポイントを公開します。
 
-| �G���h�|�C���g             | �p�X                      |
+| エンドポイント             | パス                      |
 |:---------------------------|:--------------------------|
-| ���[�U�[���G���h�|�C���g | `/api/userinfo`           |
-| �J���g���[�G���h�|�C���g   | `/api/country/{���R�[�h}` |
+| ユーザー情報エンドポイント | `/api/userinfo`           |
+| カントリーエンドポイント   | `/api/country/{国コード}` |
 
 
-#### ���[�U�[���G���h�|�C���g
+#### ユーザー情報エンドポイント
 
-���[�U�[���G���h�|�C���g�́A[OpenID Connect Core 1.0][2] ��
-[5.3. UserInfo Endpoint][1] �ɋL�q����Ă���v�������������������̂ł��B
+ユーザー情報エンドポイントは、[OpenID Connect Core 1.0][2] の
+[5.3. UserInfo Endpoint][1] に記述されている要求事項を実装したものです。
 
-���̃G���h�|�C���g�́A�A�N�Z�X�g�[�N���� Bearer Token �Ƃ��Ď󂯎��܂��B
-�܂�A`Authorization: Bearer {�A�N�Z�X�g�[�N��}`
-����āA�������̓��N�G�X�g�p�����[�^�[ `access_token={�A�N�Z�X�g�[�N��}`
-�ɂ��A�N�Z�X�g�[�N�����󂯎��܂��B �ڍׂ� [RFC 6750][20] ���Q�Ƃ��Ă��������B
+このエンドポイントは、アクセストークンを Bearer Token として受け取ります。
+つまり、`Authorization: Bearer {アクセストークン}`
+を介して、もしくはリクエストパラメーター `access_token={アクセストークン}`
+によりアクセストークンを受け取ります。 詳細は [RFC 6750][20] を参照してください。
 
-���̃G���h�|�C���g�́A�N���C�A���g�A�v���P�[�V�����̐ݒ�ɉ����āA���[�U�[����
-JSON �`���������� [JWT][18] �`���ŕԂ��܂��B �N���C�A���g�A�v���P�[�V�����̃��^�f�[�^��
-`userinfo_signed_response_alg` �� `userinfo_encrypted_response_alg`
-�̗����Ƃ��w�肳��Ă��Ȃ���΁A���[�U�[���͑f�� JSON �ŕԂ���܂��B
-�����łȂ��ꍇ�́A�V���A���C�Y���ꂽ JWT �ŕԂ���܂��B Authlete
-�̓N���C�A���g�A�v���P�[�V�����̃��^�f�[�^���Ǘ����邽�߂� Web �R���\�[��
-([�f�x���b�p�[�E�R���\�[��][19]) ��񋟂��Ă��܂��B
-�N���C�A���g�A�v���P�[�V�����̃��^�f�[�^�ɂ��ẮA
-[OpenID Connect Dynamic Client Registration 1.0][22] �� [2. Client Metadata][21]
-���Q�Ƃ��Ă��������B
+このエンドポイントは、クライアントアプリケーションの設定に応じて、ユーザー情報を
+JSON 形式もしくは [JWT][18] 形式で返します。 クライアントアプリケーションのメタデータの
+`userinfo_signed_response_alg` と `userinfo_encrypted_response_alg`
+の両方とも指定されていなければ、ユーザー情報は素の JSON で返されます。
+そうでない場合は、シリアライズされた JWT で返されます。 Authlete
+はクライアントアプリケーションのメタデータを管理するための Web コンソール
+([デベロッパー・コンソール][19]) を提供しています。
+クライアントアプリケーションのメタデータについては、
+[OpenID Connect Dynamic Client Registration 1.0][22] の [2. Client Metadata][21]
+を参照してください。
 
-�G���h�|�C���g����Ԃ���郆�[�U�[���ɂ́A���[�U�[��[�N���[��][27]���܂܂�Ă��܂��B
-��Z�Ɍ����ƁA_�N���[��_�Ƃ́A���O�⃁�[���A�h���X�Ȃǂ́A���[�U�[�Ɋւ�����ł��B
-Authlete �� (OpenID Connect ���T�|�[�g���Ă���ɂ�������炸)
-���[�U�[�f�[�^���Ǘ����Ȃ��̂ŁA���Ȃ����N���[���l��񋟂��Ȃ���΂Ȃ�܂���B
-����́A`UserInfoRequestHandlerSpi` �C���^�[�t�F�[�X���������邱�Ƃł����Ȃ��܂��B
+エンドポイントから返されるユーザー情報には、ユーザーの[クレーム][27]が含まれています。
+手短に言うと、_クレーム_とは、名前やメールアドレスなどの、ユーザーに関する情報です。
+Authlete は (OpenID Connect をサポートしているにもかかわらず)
+ユーザーデータを管理しないので、あなたがクレーム値を提供しなければなりません。
+これは、`UserInfoRequestHandlerSpi` インターフェースを実装することでおこないます。
 
-���̃��\�[�X�T�[�o�[�̎����ł́A`UserInfoRequestHandlerSpiImpl` �� `UserInfoRequestHandlerSpi`
-�C���^�[�t�F�[�X�̎����ŁA�_�~�[�f�[�^�x�[�X����N���[���l�����o���Ă��܂��B
-���ۂ̃��[�U�[�f�[�^�x�[�X���Q�Ƃ���悤�A���̎�����ύX����K�v������܂��B
+このリソースサーバーの実装では、`UserInfoRequestHandlerSpiImpl` が `UserInfoRequestHandlerSpi`
+インターフェースの実装で、ダミーデータベースからクレーム値を取り出しています。
+実際のユーザーデータベースを参照するよう、この実装を変更する必要があります。
 
 
-#### �J���g���[�G���h�|�C���g
+#### カントリーエンドポイント
 
-���̃��\�[�X�T�[�o�[�Ɏ�������Ă���J���g���[�G���h�|�C���g�́A
-�ی샊�\�[�X�G���h�|�C���g�̈��ɉ߂��܂���B
-��ȖړI�́A�ی샊�\�[�X�G���h�|�C���g�ɂ�����A�N�Z�X�g�[�N���̗L�����̊m�F���@���������Ƃł��B
-��̓I�ɂ́A`BaseResourceEndpoint` �N���X�� `extractAccessToken` ���\�b�h��
-`validateAccessToken` ���\�b�h�̎g�������������Ƃł��B
+このリソースサーバーに実装されているカントリーエンドポイントは、
+保護リソースエンドポイントの一例に過ぎません。
+主な目的は、保護リソースエンドポイントにおけるアクセストークンの有効性の確認方法を示すことです。
+具体的には、`BaseResourceEndpoint` クラスの `extractAccessToken` メソッドと
+`validateAccessToken` メソッドの使い方を示すことです。
 
-�J���g���[�G���h�|�C���g�̃p�X�� `/api/country/{���R�[�h}` �ŁA`{���R�[�h}` �̕�����
-[ISO 3166-1 �R�[�h][23]�ł� ([alpha-2][24]�A[alpha-3][25] �܂��� [numeric][26])�B
-�Ⴆ�΁A`JP`�A`JPN`�A`392` �͗L���� ISO 3166-1 �R�[�h�ŁA�����͑S�ē��{��\���܂��B
-�ł��̂ŁA���� URL �̓J���g���[�G���h�|�C���g�ɑ΂���L���ȃ��N�G�X�g�ł��B
+カントリーエンドポイントのパスは `/api/country/{国コード}` で、`{国コード}` の部分は
+[ISO 3166-1 コード][23]です ([alpha-2][24]、[alpha-3][25] または [numeric][26])。
+例えば、`JP`、`JPN`、`392` は有効な ISO 3166-1 コードで、これらは全て日本を表します。
+ですので、次の URL はカントリーエンドポイントに対する有効なリクエストです。
 
     http://localhost:8081/api/country/JP?access_token={access-token}
 
-�G���h�|�C���g����̉����� JSON �ŁA`{���R�[�h}` �Ŏw�肳�ꂽ���Ɋւ��鎟�̏����܂�ł��܂��B
+エンドポイントからの応答は JSON で、`{国コード}` で指定された国に関する次の情報を含んでいます。
 
-  1. ����
-  2. ISO 3166-1 alpha-2 �R�[�h
-  3. ISO 3166-1 alpha-3 �R�[�h
-  4. ISO 3166-1 numeric �R�[�h
-  5. �ʉ�
+  1. 国名
+  2. ISO 3166-1 alpha-2 コード
+  3. ISO 3166-1 alpha-3 コード
+  4. ISO 3166-1 numeric コード
+  5. 通貨
 
-���Ɏ����͉̂�����ł��B
+次に示すのは応答例です。
 
 ```javascript
 {
@@ -154,35 +164,35 @@ Authlete �� (OpenID Connect ���T�|�[�g���Ă���ɂ�������炸)
 }
 ```
 
-Web API �� OAuth �̃A�N�Z�X�g�[�N���ŕی삷����@�Ɋւ����ʓI�ȏ�񂨂��
-Authlete �ŗL�̏��ɂ��ẮA[Authlete Definitive Guide][17] ��
-[Protected Resource][16] ���Q�Ƃ��Ă��������B
+Web API を OAuth のアクセストークンで保護する方法に関する一般的な情報および
+Authlete 固有の情報については、[Authlete Definitive Guide][17] の
+[Protected Resource][16] を参照してください。
 
 
-�J�X�^�}�C�Y
+カスタマイズ
 ------------
 
-�V�����ی샊�\�[�X�G���h�|�C���g��ǉ�����ł��ȒP�ȕ��@�́A`CountryEndpoint`
-�������Ȃ��Ă���悤�ɁA`BaseResourceEndpoint` �̃T�u�N���X���쐬������@�ł��B
-�������A�������A���� `AcessTokenValidator` ([authlete-java-jaxrs][4]) ���g�p������
+新しい保護リソースエンドポイントを追加する最も簡単な方法は、`CountryEndpoint`
+がおこなっているように、`BaseResourceEndpoint` のサブクラスを作成する方法です。
+しかし、もちろん、直接 `AcessTokenValidator` ([authlete-java-jaxrs][4]) を使用したり
 `AuthleteApi.introspection(IntrospectionRequest)` API ([authlete-java-common][6])
-���R�[�����Ă����܂��܂���B
+をコールしてもかまいません。
 
-�V�����ی샊�\�[�X�G���h�|�C���g��ǉ�����ɏ]���A�V�����X�R�[�v��ǉ��������Ǝv���ł��傤�B
-���Ȃ��� Web API �p�ɐV�����X�R�[�v��ǉ�����ɂ́A[�T�[�r�X�I�[�i�[�E�R���\�[��][28]
-���g�p���Ă��������B
+新しい保護リソースエンドポイントを追加するに従い、新しいスコープを追加したいと思うでしょう。
+あなたの Web API 用に新しいスコープを追加するには、[サービスオーナー・コンソール][28]
+を使用してください。
 
 
-���̑��̏��
+その他の情報
 ------------
 
-- [Authlete][11] - Authlete �z�[���y�[�W
-- [authlete-java-common][6] - Java �p Authlete ���ʃ��C�u����
-- [authlete-java-jaxrs][4] - JAX-RS (Java) �p Authlete ���C�u����
-- [java-oauth-server][8] - �F�T�[�o�[�̎���
+- [Authlete][11] - Authlete ホームページ
+- [authlete-java-common][6] - Java 用 Authlete 共通ライブラリ
+- [authlete-java-jaxrs][4] - JAX-RS (Java) 用 Authlete ライブラリ
+- [java-oauth-server][8] - 認可サーバーの実装
 
 
-�T�|�[�g
+サポート
 --------
 
 [Authlete, Inc.][11]<br/>
@@ -217,3 +227,4 @@ support@authlete.com
 [26]: http://en.wikipedia.org/wiki/ISO_3166-1_numeric
 [27]: http://openid.net/specs/openid-connect-core-1_0.html#Claims
 [28]: https://www.authlete.com/documents/so_console
+[29]: https://maven.apache.org/
