@@ -67,9 +67,19 @@ How To Run
 
         $ vi authlete.properties
 
-3. Start the resource server on [http://localhost:8081/][15].
+3. Make sure that you have installed [maven][29] and set `JAVA_HOME` properly.
+
+4. Start the resource server on [http://localhost:8081/][15].
 
         $ mvn jetty:run &
+
+#### Run With Docker
+
+If you would prefer to use Docker, just hit the following command after the step 2.
+
+    $ docker-compose up
+
+#### Configuration File
 
 `java-resource-server` refers to `authlete.properties` as a configuration file.
 If you want to use another different file, specify the name of the file by
@@ -219,3 +229,4 @@ support@authlete.com
 [26]: http://en.wikipedia.org/wiki/ISO_3166-1_numeric
 [27]: http://openid.net/specs/openid-connect-core-1_0.html#Claims
 [28]: https://www.authlete.com/documents/so_console
+[29]: https://maven.apache.org/
