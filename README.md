@@ -104,7 +104,7 @@ This implementation exposes endpoints as listed in the table below.
 The userinfo endpoint is an implementation of the requirements described in
 [5.3. UserInfo Endpoint][1] of [OpenID Connect Core 1.0][2].
 
-The endpoint accepts an access token as a Bearer Token. That is, its accepts
+The endpoint accepts an access token as a Bearer Token. That is, it accepts
 an access token via `Authorization: Bearer {access-token}` or by a request
 parameter `access_token={access-token}`. See [RFC 6750][20] for details.
 
