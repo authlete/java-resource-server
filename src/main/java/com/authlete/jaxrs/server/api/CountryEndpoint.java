@@ -19,6 +19,8 @@ package com.authlete.jaxrs.server.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -27,6 +29,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -92,7 +95,8 @@ public class CountryEndpoint extends BaseResourceEndpoint
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @QueryParam("access_token") String accessToken,
-            @PathParam("code") String code)
+            @PathParam("code") String code,
+            @Context HttpServletRequest request)
     {
         // Extract an access token from either the Authorization header or
         // the request parameters. The Authorization header takes precedence.
@@ -100,7 +104,9 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // an access token from a client application.
         String token = extractAccessToken(authorization, accessToken);
 
-        return process(token, code);
+        String clientCertificate = extractClientCertificate(request);
+
+        return process(token, code, clientCertificate);
     }
 
 
@@ -109,7 +115,8 @@ public class CountryEndpoint extends BaseResourceEndpoint
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
             @FormParam("access_token") String accessToken,
-            @PathParam("code") String code)
+            @PathParam("code") String code,
+            @Context HttpServletRequest request)
     {
         // Extract an access token from either the Authorization header or
         // the request parameters. The Authorization header takes precedence.
@@ -117,11 +124,13 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // an access token from a client application.
         String token = extractAccessToken(authorization, accessToken);
 
-        return process(token, code);
+        String clientCertificate = extractClientCertificate(request);
+        
+        return process(token, code, clientCertificate);
     }
 
 
-    private Response process(String accessToken, String code)
+    private Response process(String accessToken, String code, String clientCertificate)
     {
         // Validate the access token. Because this endpoint does not require
         // any scopes, here we use the simplest variant of validateAccessToken()
@@ -139,7 +148,7 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // instance of AccessTokenInfo class. If you want to get information
         // even in the case where validateAccessToken() throws an exception,
         // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken);
+        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate);
 
         // The access token presented by the client application is valid.
 
