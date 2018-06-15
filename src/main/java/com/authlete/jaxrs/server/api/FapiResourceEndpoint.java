@@ -38,7 +38,7 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
     @GET
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @HeaderParam("x-fapi-financial-id") String financialId,
+            @HeaderParam("x-fapi-financial-id") @DefaultValue("") String financialId,
             @HeaderParam("x-fapi-interaction-id") @DefaultValue("") String interactionId,
             @HeaderParam("x-fapi-auth-date") @DefaultValue("") String authDate,
             @HeaderParam("x-fapi-customer-ip-address") @DefaultValue("") String customerIpAddress,
@@ -77,11 +77,7 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
             // log the financial ID
             if (financialId != null && !financialId.isEmpty())
             {
-                logger.info("FAPI Financial ID: " + financialId);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Financial ID cannot be null or empty.");
+                logger.info("(Legacy) FAPI Financial ID: " + financialId);
             }
             
             String outgoingInteractionId = getInteractionId(incomingInteractionId);
@@ -105,7 +101,9 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
             
             String json = GSON.toJson(new JsonObject());
             
-            return Response.ok(json).build();
+            return Response.ok(json)
+                    .header("x-fapi-interaction-id", outgoingInteractionId)
+                    .build();
             
         }
         catch (IllegalArgumentException | ParseException e)
