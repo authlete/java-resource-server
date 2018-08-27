@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -40,7 +42,8 @@ public class AccountRequestsEndpoint extends BaseResourceEndpoint
 {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response post()
+    public Response post(
+            @HeaderParam("x-fapi-interaction-id") @DefaultValue("") String interactionId)
     {
         // {
         //   "Data" : {
@@ -57,11 +60,18 @@ public class AccountRequestsEndpoint extends BaseResourceEndpoint
         // Data.AccountRequestId
         data.put("AccountRequestId", UUID.randomUUID().toString());
 
+        // Generate the outgoing interaction ID if necessary.
+        if (interactionId == null || interactionId.isEmpty())
+        {
+            interactionId = UUID.randomUUID().toString();
+        }
+
         // 201 Created, application/json
         return Response
                 .status(Status.CREATED)
                 .type(MediaType.APPLICATION_JSON_TYPE)
                 .entity(Utils.toJson(root, true))
+                .header("x-fapi-interaction-id", interactionId)
                 .build();
     }
 }

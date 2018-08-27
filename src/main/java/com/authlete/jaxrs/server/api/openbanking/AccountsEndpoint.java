@@ -20,7 +20,10 @@ package com.authlete.jaxrs.server.api.openbanking;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -37,7 +40,8 @@ import com.authlete.jaxrs.BaseResourceEndpoint;
 public class AccountsEndpoint extends BaseResourceEndpoint
 {
     @GET
-    public Response post()
+    public Response post(
+            @HeaderParam("x-fapi-interaction-id") @DefaultValue("") String interactionId)
     {
         // {
         //   "Data" : {
@@ -54,9 +58,16 @@ public class AccountsEndpoint extends BaseResourceEndpoint
         // Data.Account
         data.put("Account", new ArrayList<Map<String, Object>>());
 
+        // Generate the outgoing interaction ID if necessary.
+        if (interactionId == null || interactionId.isEmpty())
+        {
+            interactionId = UUID.randomUUID().toString();
+        }
+
         // 200 0K, application/json
         return Response
                 .ok(Utils.toJson(root, true), MediaType.APPLICATION_JSON_TYPE)
+                .header("x-fapi-interaction-id", interactionId)
                 .build();
     }
 }
