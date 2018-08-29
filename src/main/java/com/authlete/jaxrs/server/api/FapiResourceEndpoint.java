@@ -47,10 +47,10 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // Extract an access token from the Authorization header (note we don't pass in the query parameter)
         String token = extractAccessToken(authorization, null);
 
-        return process(token, financialId, interactionId, authDate, customerIpAddress);
+        return process(token, financialId, interactionId, authDate, customerIpAddress, extractClientCertificate(request));
     }
 
-    private Response process(String accessToken, String financialId, String incomingInteractionId, String authDate, String customerIpAddress)
+    private Response process(String accessToken, String financialId, String incomingInteractionId, String authDate, String customerIpAddress, String clientCertificate)
     {
         // Validate the access token. Because this endpoint does not require
         // any scopes, here we use the simplest variant of validateAccessToken()
@@ -68,7 +68,7 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // instance of AccessTokenInfo class. If you want to get information
         // even in the case where validateAccessToken() throws an exception,
         // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken);
+        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate);
 
         // The access token presented by the client application is valid.
 
