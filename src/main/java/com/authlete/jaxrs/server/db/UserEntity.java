@@ -117,4 +117,11 @@ public class UserEntity implements User
                 return null;
         }
     }
+
+
+    @Override
+    public Object getAttribute(String attributeName)
+    {
+        return null;
+    }
 }
