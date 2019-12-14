@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,18 +17,19 @@
 package com.authlete.jaxrs.server.api;
 
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseUserInfoEndpoint;
+import com.authlete.jaxrs.util.JaxRsUtils;
 
 
 /**
@@ -67,13 +68,42 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
      *      >OpenID Connect Core 1.0, 5.3.1. UserInfo Request</a>
      */
     @POST
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @FormParam("access_token") String accessToken)
+            @Context HttpServletRequest request, String body)
     {
+        // '@Consumes(MediaType.APPLICATION_FORM_URLENCODED)' and
+        // '@FormParam("access_token") are not used here because clients may send
+        // a request without 'Content-Type' even if the HTTP method is 'POST'.
+        //
+        // See Issue 1137 in openid/connect for details.
+        //
+        //   Is content-type application/x-www-form-urlencoded required
+        //   when calling user info endpoint with empty body?
+        //
+        //     https://bitbucket.org/openid/connect/issues/1137/is-content-type-application-x-www-form
+        //
+
+        // Extract "access_token" from the request body if the Content-Type of
+        // the request is 'application/x-www-form-urlencoded'.
+        String accessToken = extractFormParameter(request, body, "access_token");
+
         // Handle the userinfo request.
         return handle(extractAccessToken(authorization, accessToken));
+    }
+
+
+    private static String extractFormParameter(HttpServletRequest request, String body, String key)
+    {
+        // If the request does not include 'Content-Type' or
+        // its value is not 'application/x-www-form-urlencoded'.
+        if (!MediaType.APPLICATION_FORM_URLENCODED.equals(request.getContentType()))
+        {
+            return null;
+        }
+
+        // Get the value of "access_token" if available.
+        return JaxRsUtils.parseFormUrlencoded(body).getFirst("access_token");
     }
 
 
