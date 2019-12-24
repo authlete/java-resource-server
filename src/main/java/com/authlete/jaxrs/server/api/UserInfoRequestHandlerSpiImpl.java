@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2019 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@
 package com.authlete.jaxrs.server.api;
 
 
+import com.authlete.common.assurance.VerifiedClaims;
+import com.authlete.common.assurance.constraint.VerifiedClaimsConstraint;
 import com.authlete.common.types.User;
 import com.authlete.jaxrs.server.db.UserDao;
+import com.authlete.jaxrs.server.db.VerifiedClaimsDao;
 import com.authlete.jaxrs.spi.UserInfoRequestHandlerSpiAdapter;
 
 
@@ -55,5 +58,12 @@ public class UserInfoRequestHandlerSpiImpl extends UserInfoRequestHandlerSpiAdap
 
         // Get the value of the claim.
         return mUser.getClaim(claimName, languageTag);
+    }
+
+
+    @Override
+    public VerifiedClaims getVerifiedClaims(String subject, VerifiedClaimsConstraint constraint)
+    {
+        return VerifiedClaimsDao.get(subject, constraint);
     }
 }
