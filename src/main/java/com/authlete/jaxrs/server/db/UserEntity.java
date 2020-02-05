@@ -36,6 +36,18 @@ public class UserEntity implements User
 
 
     /**
+     * The login ID.
+     */
+    private String loginId;
+
+
+    /**
+     * The login password.
+     */
+    private String password;
+
+
+    /**
      * The name of the user.
      */
     private String name;
@@ -60,17 +72,50 @@ public class UserEntity implements User
 
 
     /**
+     * The code of the user.
+     */
+    private String code;
+
+
+    /**
      * Constructor with initial values.
      */
     public UserEntity(
-            String subject, String name,
-            String email, Address address, String phoneNumber)
+            String subject, String loginId, String password, String name,
+            String email, Address address, String phoneNumber, String code)
     {
         this.subject     = subject;
+        this.loginId     = loginId;
+        this.password    = password;
         this.name        = name;
         this.email       = email;
         this.address     = address;
         this.phoneNumber = phoneNumber;
+        this.code        = code;
+    }
+
+
+    /**
+     * Get the login ID.
+     *
+     * @return
+     *         The login ID.
+     */
+    public String getLoginId()
+    {
+        return loginId;
+    }
+
+
+    /**
+     * Get the login password.
+     *
+     * @return
+     *         The login password.
+     */
+    public String getPassword()
+    {
+        return password;
     }
 
 
@@ -108,7 +153,7 @@ public class UserEntity implements User
                 return address;
 
             case StandardClaims.PHONE_NUMBER:
-                // "phone_number" claim. This claim can be requested by included "phone"
+                // "phone_number" claim. This claim can be requested by including "phone"
                 // in "scope" parameter of an authorization request.
                 return phoneNumber;
 
@@ -122,6 +167,20 @@ public class UserEntity implements User
     @Override
     public Object getAttribute(String attributeName)
     {
-        return null;
+        if (attributeName == null)
+        {
+            return null;
+        }
+
+        switch (attributeName)
+        {
+            case "code":
+                // The code of the user.
+                return code;
+
+            default:
+                // Unsupported attribute.
+                return null;
+        }
     }
 }
