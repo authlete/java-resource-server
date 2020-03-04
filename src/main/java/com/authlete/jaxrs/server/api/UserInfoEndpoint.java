@@ -54,10 +54,15 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     @GET
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @QueryParam("access_token") String accessToken)
+            @HeaderParam("DPoP") String dpopHeader,
+            @QueryParam("access_token") String accessToken,
+            @Context HttpServletRequest request)
     {
+        String htu = request.getRequestURL().toString();
+        String clientCertificate = extractClientCertificate(request);
+
         // Handle the userinfo request.
-        return handle(extractAccessToken(authorization, accessToken));
+        return handle(extractAccessToken(authorization, accessToken), clientCertificate, dpopHeader, "get", htu);
     }
 
 
@@ -70,6 +75,7 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     @POST
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpopHeader,
             @Context HttpServletRequest request, String body)
     {
         // '@Consumes(MediaType.APPLICATION_FORM_URLENCODED)' and
@@ -88,8 +94,12 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
         // the request is 'application/x-www-form-urlencoded'.
         String accessToken = extractFormParameter(request, body, "access_token");
 
+        String htu = request.getRequestURL().toString();
+
+        String clientCertificate = extractClientCertificate(request);
+
         // Handle the userinfo request.
-        return handle(extractAccessToken(authorization, accessToken));
+        return handle(extractAccessToken(authorization, accessToken), clientCertificate, dpopHeader, "post", htu);
     }
 
 
@@ -110,9 +120,9 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     /**
      * Handle the userinfo request.
      */
-    private Response handle(String accessToken)
+    private Response handle(String accessToken, String clientCertificate, String dpopHeader, String htm, String htu)
     {
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new UserInfoRequestHandlerSpiImpl(), accessToken);
+                new UserInfoRequestHandlerSpiImpl(), accessToken, clientCertificate, dpopHeader, htm, htu);
     }
 }

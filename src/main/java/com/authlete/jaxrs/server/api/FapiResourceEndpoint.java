@@ -68,7 +68,7 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // instance of AccessTokenInfo class. If you want to get information
         // even in the case where validateAccessToken() throws an exception,
         // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate);
+        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate, null, null, null);
 
         // The access token presented by the client application is valid.
 
