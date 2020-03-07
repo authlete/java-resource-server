@@ -1,10 +1,26 @@
+/*
+ * Copyright (C) 2018-2020 Authlete, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the
+ * License.
+ */
 package com.authlete.jaxrs.server.api;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 import java.util.logging.Logger;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -14,12 +30,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
 
 @Path("/api/fapi/{endpoint: .*}")
 public class FapiResourceEndpoint extends BaseResourceEndpoint
@@ -32,9 +48,9 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
 
     // date parser
     SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
-    
+
     private static Logger logger = Logger.getLogger(FapiResourceEndpoint.class.getName());
-    
+
     @GET
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
@@ -49,6 +65,7 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
 
         return process(token, financialId, interactionId, authDate, customerIpAddress, extractClientCertificate(request));
     }
+
 
     private Response process(String accessToken, String financialId, String incomingInteractionId, String authDate, String customerIpAddress, String clientCertificate)
     {
@@ -79,53 +96,50 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
             {
                 logger.info("(Legacy) FAPI Financial ID: " + financialId);
             }
-            
+
             String outgoingInteractionId = getInteractionId(incomingInteractionId);
-            
+
             // log the interaction ID
             logger.info("FAPI Interaction ID: " + outgoingInteractionId);
-            
+
             // try parsing the date header if it exists
             if (authDate != null && !authDate.isEmpty())
             {
                 // this will throw an exception if the format is wrong
                 format.parse(authDate);
-                
+
                 logger.info("Auth date: " + authDate);
             }
-            
+
             if (customerIpAddress != null && !customerIpAddress.isEmpty())
             {
                 logger.info("IP Address: " + customerIpAddress);
             }
-            
+
             String json = GSON.toJson(new JsonObject());
-            
+
             return Response.ok(json)
                     .header("x-fapi-interaction-id", outgoingInteractionId)
                     .build();
-            
         }
         catch (IllegalArgumentException | ParseException e)
         {
             logger.severe(e.getMessage());
             return Response.status(Status.BAD_REQUEST).build();
         }
-        
     }
 
-    
+
     // Get the value for the x-fapi-interaction-id header to return
     private String getInteractionId(String interactionId)
     {
-        
         if (interactionId != null && !interactionId.isEmpty())
         {
             // make sure the interaction ID is a UUID; this throws an IllegalArgumentException if it fails
             UUID.fromString(interactionId);
-            
+
             return interactionId;
-            
+
         }
         else
         {
@@ -133,5 +147,4 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
             return UUID.randomUUID().toString();
         }
     }
-    
 }

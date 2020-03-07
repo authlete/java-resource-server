@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016-2019 Authlete, Inc.
+ * Copyright (C) 2016-2020 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.jaxrs.BaseUserInfoEndpoint;
+import com.authlete.jaxrs.UserInfoRequestHandler.Params;
 import com.authlete.jaxrs.util.JaxRsUtils;
 
 
@@ -54,10 +55,16 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     @GET
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @QueryParam("access_token") String accessToken)
+            @HeaderParam("DPoP") String dpop,
+            @QueryParam("access_token") String accessToken,
+            @Context HttpServletRequest request)
     {
+        // Select either the access token embedded in the Authorization header
+        // or the access token in the query component.
+        accessToken = extractAccessToken(authorization, accessToken);
+
         // Handle the userinfo request.
-        return handle(extractAccessToken(authorization, accessToken));
+        return handle(request, accessToken, dpop);
     }
 
 
@@ -70,6 +77,7 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     @POST
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpop,
             @Context HttpServletRequest request, String body)
     {
         // '@Consumes(MediaType.APPLICATION_FORM_URLENCODED)' and
@@ -88,8 +96,12 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
         // the request is 'application/x-www-form-urlencoded'.
         String accessToken = extractFormParameter(request, body, "access_token");
 
+        // Select either the access token embedded in the Authorization header
+        // or the access token in the request body.
+        accessToken = extractAccessToken(authorization, accessToken);
+
         // Handle the userinfo request.
-        return handle(extractAccessToken(authorization, accessToken));
+        return handle(request, accessToken, dpop);
     }
 
 
@@ -110,9 +122,43 @@ public class UserInfoEndpoint extends BaseUserInfoEndpoint
     /**
      * Handle the userinfo request.
      */
-    private Response handle(String accessToken)
+    private Response handle(HttpServletRequest request, String accessToken, String dpop)
     {
+        Params params = buildParams(request, accessToken, dpop);
+
         return handle(AuthleteApiFactory.getDefaultApi(),
-                new UserInfoRequestHandlerSpiImpl(), accessToken);
+                new UserInfoRequestHandlerSpiImpl(), params);
+    }
+
+
+    private Params buildParams(
+            HttpServletRequest request, String accessToken, String dpop)
+    {
+        Params params = new Params();
+
+        // Access Token
+        params.setAccessToken(accessToken);
+
+        // Client Certificate
+        params.setClientCertificate(extractClientCertificate(request));
+
+        // DPoP
+        params.setDpop(dpop)
+              .setHtm(request.getMethod())
+              //.setHtu(request.getRequestURL().toString())
+              ;
+
+        // We can reconstruct the URL of the userinfo endpoint by calling
+        // request.getRequestURL().toString() and set it to params by the
+        // setHtu(String) method. However, the calculated URL may be invalid
+        // behind proxies.
+        //
+        // If "htu" is not set here, the "userInfoEndpoint" property of "Service"
+        // (which can be configured by using Authlete's Service Owner Console)
+        // is referred to as the default value. Therefore, we don't call the
+        // setHtu(String) method here intentionally. Note that this means you
+        // have to set "userInfoEndpoint" properly to support DPoP.
+
+        return params;
     }
 }
