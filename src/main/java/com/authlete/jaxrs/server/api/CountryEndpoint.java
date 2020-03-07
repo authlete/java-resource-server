@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Authlete, Inc.
+ * Copyright (C) 2016-2020 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package com.authlete.jaxrs.server.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -34,6 +33,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.jaxrs.AccessTokenValidator.Params;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -94,6 +94,7 @@ public class CountryEndpoint extends BaseResourceEndpoint
     @GET
     public Response get(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpop,
             @QueryParam("access_token") String accessToken,
             @PathParam("code") String code,
             @Context HttpServletRequest request)
@@ -104,9 +105,7 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // an access token from a client application.
         String token = extractAccessToken(authorization, accessToken);
 
-        String clientCertificate = extractClientCertificate(request);
-
-        return process(token, code, clientCertificate);
+        return process(request, token, dpop, code);
     }
 
 
@@ -114,6 +113,7 @@ public class CountryEndpoint extends BaseResourceEndpoint
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
+            @HeaderParam("DPoP") String dpop,
             @FormParam("access_token") String accessToken,
             @PathParam("code") String code,
             @Context HttpServletRequest request)
@@ -124,18 +124,14 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // an access token from a client application.
         String token = extractAccessToken(authorization, accessToken);
 
-        String clientCertificate = extractClientCertificate(request);
-        
-        return process(token, code, clientCertificate);
+        return process(request, token, dpop, code);
     }
 
 
-    private Response process(String accessToken, String code, String clientCertificate)
+    private Response process(
+            HttpServletRequest request, String accessToken, String dpop, String code)
     {
-        // Validate the access token. Because this endpoint does not require
-        // any scopes, here we use the simplest variant of validateAccessToken()
-        // methods which does not take 'requiredScopes' argument. See the JavaDoc
-        // of BaseResourceEndpoint (authlete-java-jaxrs) for details.
+        // Validate the access token.
         //
         // validateAccessToken() throws a WebApplicationException when the given
         // access token is invalid. The response contained in the exception
@@ -148,12 +144,37 @@ public class CountryEndpoint extends BaseResourceEndpoint
         // instance of AccessTokenInfo class. If you want to get information
         // even in the case where validateAccessToken() throws an exception,
         // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate, null, null, null);
+        Params params = buildParams(request, accessToken, dpop);
+        validateAccessToken(AuthleteApiFactory.getDefaultApi(), params);
 
         // The access token presented by the client application is valid.
 
         // Return the requested resource.
         return getResource(code);
+    }
+
+
+    private Params buildParams(
+            HttpServletRequest request, String accessToken, String dpop)
+    {
+        Params params = new Params();
+
+        // Access Token
+        params.setAccessToken(accessToken);
+
+        // Client Certificate
+        params.setClientCertificate(extractClientCertificate(request));
+
+        // DPoP
+        params.setDpop(dpop)
+              .setHtm(request.getMethod())
+              .setHtu(request.getRequestURL().toString())
+              ;
+
+        // NOTE: The URL built by request.getRequestURL().toString() may
+        //       be invalid behind proxies.
+
+        return params;
     }
 
 
