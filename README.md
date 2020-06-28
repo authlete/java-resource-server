@@ -194,39 +194,43 @@ See Also
 - [java-oauth-server][8] - Authorization Server Implementation
 
 
-Support
+Contact
 -------
 
-[Authlete, Inc.][11]<br/>
-support@authlete.com
+| Purpose   | Email Address        |
+|:----------|:---------------------|
+| General   | info@authlete.com    |
+| Sales     | sales@authlete.com   |
+| PR        | pr@authlete.com      |
+| Technical | support@authlete.com |
 
 
-[1]: http://openid.net/specs/openid-connect-core-1_0.html#UserInfo
-[2]: http://openid.net/specs/openid-connect-core-1_0.html
-[3]: http://tools.ietf.org/html/rfc6750
+[1]: https://openid.net/specs/openid-connect-core-1_0.html#UserInfo
+[2]: https://openid.net/specs/openid-connect-core-1_0.html
+[3]: https://tools.ietf.org/html/rfc6750
 [4]: https://github.com/authlete/authlete-java-jaxrs
 [5]: https://jcp.org/en/jsr/detail?id=339
 [6]: https://github.com/authlete/authlete-java-common
-[7]: https://www.authlete.com/documents/apis
+[7]: https://docs.authlete.com/
 [8]: https://github.com/authlete/java-oauth-server
-[9]: http://tools.ietf.org/html/rfc6749
-[10]: http://openid.net/connect/
+[9]: https://tools.ietf.org/html/rfc6749
+[10]: https://openid.net/connect/
 [11]: https://www.authlete.com/
-[12]: https://www.authlete.com/documents/overview
+[12]: https://www.authlete.com/developers/overview/
 [13]: https://so.authlete.com/accounts/signup
-[14]: https://www.authlete.com/documents/getting_started
+[14]: https://www.authlete.com/developers/getting_started/
 [15]: http://localhost:8081/
-[16]: https://www.authlete.com/documents/definitive_guide/protected_resource
-[17]: https://www.authlete.com/documents/definitive_guide
-[18]: http://tools.ietf.org/html/rfc7519
-[19]: https://www.authlete.com/documents/cd_console
-[20]: http://tools.ietf.org/html/rfc6750
-[21]: http://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata
-[22]: http://openid.net/specs/openid-connect-registration-1_0.html
-[23]: http://en.wikipedia.org/wiki/ISO_3166-1
-[24]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-[25]: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
-[26]: http://en.wikipedia.org/wiki/ISO_3166-1_numeric
-[27]: http://openid.net/specs/openid-connect-core-1_0.html#Claims
-[28]: https://www.authlete.com/documents/so_console
+[16]: https://www.authlete.com/developers/definitive_guide/protected_resource/
+[17]: https://www.authlete.com/developers/definitive_guide/
+[18]: https://tools.ietf.org/html/rfc7519
+[19]: https://www.authlete.com/developers/cd_console/
+[20]: https://tools.ietf.org/html/rfc6750
+[21]: https://openid.net/specs/openid-connect-registration-1_0.html#ClientMetadata
+[22]: https://openid.net/specs/openid-connect-registration-1_0.html
+[23]: https://en.wikipedia.org/wiki/ISO_3166-1
+[24]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+[25]: https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3
+[26]: https://en.wikipedia.org/wiki/ISO_3166-1_numeric
+[27]: https://openid.net/specs/openid-connect-core-1_0.html#Claims
+[28]: https://www.authlete.com/developers/so_console/
 [29]: https://maven.apache.org/
