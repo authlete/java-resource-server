@@ -20,11 +20,13 @@ package com.authlete.jaxrs.server.api.openbanking;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -32,6 +34,7 @@ import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.util.Utils;
 import com.authlete.jaxrs.AccessTokenInfo;
+import com.authlete.jaxrs.AccessTokenValidator.Params;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 
 
@@ -47,10 +50,11 @@ public class AccountRequestsEndpoint extends BaseResourceEndpoint
     @Consumes(MediaType.APPLICATION_JSON)
     public Response post(
             @HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-            @HeaderParam("x-fapi-interaction-id") @DefaultValue("") String incomingInteractionId)
+            @HeaderParam("x-fapi-interaction-id") @DefaultValue("") String incomingInteractionId,
+            @Context HttpServletRequest request)
     {
         // Process the access token.
-        AccessTokenInfo atInfo = processAccessToken(authorization);
+        AccessTokenInfo atInfo = processAccessToken(authorization, request);
 
         // Prepare the content of the response.
         Map<String, Object> content = buildContent(atInfo);
@@ -63,10 +67,13 @@ public class AccountRequestsEndpoint extends BaseResourceEndpoint
     }
 
 
-    private AccessTokenInfo processAccessToken(String authorization)
+    private AccessTokenInfo processAccessToken(String authorization, HttpServletRequest request)
     {
         // Extract an access token from the Authorization header.
         String accessToken = extractAccessToken(authorization, null);
+
+        // Extract a client certificate.
+        String certificate = extractClientCertificate(request);
 
         // If the request does not contain an access token.
         if (accessToken == null)
@@ -75,8 +82,11 @@ public class AccountRequestsEndpoint extends BaseResourceEndpoint
             return null;
         }
 
+        // Parameters for access token validation.
+        Params params = new Params().setAccessToken(accessToken).setClientCertificate(certificate);
+
         // Validate the access token.
-        return validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken);
+        return validateAccessToken(AuthleteApiFactory.getDefaultApi(), params);
     }
 
 
