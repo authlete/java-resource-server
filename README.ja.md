@@ -128,6 +128,16 @@ Authlete は (OpenID Connect をサポートしているにもかかわらず)
 インターフェースの実装で、ダミーデータベースからクレーム値を取り出しています。
 実際のユーザーデータベースを参照するよう、この実装を変更する必要があります。
 
+##### 注意書き (2022 年 5 月 1 日)
+
+[java-oauth-server][8] にもユーザー情報エンドポイントが実装されました。
+java-resource-server のユーザー情報エンドポイントの実装はメンテナンスされません。
+
+java-oauth-server のユーザー情報エンドポイントは、[OpenID Connect for Identity Assurance 1.0][IDA]
+のフィルタリング規則とデータ最小化ポリシーを正しく実装し、また、
+[OpenID Connect Advanced Syntax for Claims 1.0][ASC] で定義されている変換クレーム
+(Transformed Claim) をサポートします。
+
 
 #### カントリーエンドポイント
 
@@ -232,3 +242,5 @@ Authlete 固有の情報については、[Authlete Definitive Guide][17] の
 [27]: https://openid.net/specs/openid-connect-core-1_0.html#Claims
 [28]: https://www.authlete.com/ja/developers/so_console/
 [29]: https://maven.apache.org/
+[IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+[ASC]: https://bitbucket.org/openid/ekyc-ida/src/master/openid-advanced-syntax-for-claims.md

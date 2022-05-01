@@ -128,6 +128,16 @@ an example implementation of `UserInfoRequestHandlerSpi` interface and it
 retrieves claim values from a dummy database. You need to modify the
 implementation to make it refer to your actual user database.
 
+##### NOTE (May 1, 2022)
+
+A userinfo endpoint was implemented in [java-oauth-server][8]. The userinfo
+endpoint implemented in java-resource-server is no longer maintained.
+
+The userinfo endpoint implementation in java-oauth-server correctly implements
+the filtering rules and the data minimization policy of
+[OpenID Connect for Identity Assurance 1.0][IDA] and supports Transformed Claims
+defined in [OpenID Connect Advanced Syntax for Claims 1.0][ASC].
+
 
 #### Country Endpoint
 
@@ -234,3 +244,5 @@ Contact
 [27]: https://openid.net/specs/openid-connect-core-1_0.html#Claims
 [28]: https://www.authlete.com/developers/so_console/
 [29]: https://maven.apache.org/
+[IDA]: https://openid.net/specs/openid-connect-4-identity-assurance-1_0.html
+[ASC]: https://bitbucket.org/openid/ekyc-ida/src/master/openid-advanced-syntax-for-claims.md
