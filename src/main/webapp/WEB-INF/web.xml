@@ -31,6 +31,7 @@
         com.authlete.jaxrs.server.api.FapiResourceEndpoint,
         com.authlete.jaxrs.server.api.openbanking.AccountRequestsEndpoint,
         com.authlete.jaxrs.server.api.openbanking.AccountsEndpoint,
+        com.authlete.jaxrs.server.api.openbanking.KSAAccountAccessConsentsEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature
       </param-value>
     </init-param>
