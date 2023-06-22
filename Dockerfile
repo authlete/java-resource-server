@@ -1,4 +1,4 @@
-FROM maven:3.8.5-openjdk-8-slim
+FROM maven:3.8.5-openjdk-8
 EXPOSE 8081
 
 RUN mkdir -p /authlete/app
