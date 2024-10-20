@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 Authlete, Inc.
+ * Copyright (C) 2018-2024 Authlete, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package com.authlete.jaxrs.server.api;
 
 
+import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
@@ -31,7 +32,9 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
+import com.authlete.common.dto.IntrospectionRequest;
 import com.authlete.jaxrs.BaseResourceEndpoint;
+import com.authlete.jaxrs.util.RequestUrlResolver;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -63,17 +66,15 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // Extract an access token from the Authorization header (note we don't pass in the query parameter)
         String token = extractAccessToken(authorization, null);
 
-        return process(token, financialId, interactionId, authDate, customerIpAddress, extractClientCertificate(request));
+        return process(request, token, financialId, interactionId, authDate, customerIpAddress);
     }
 
 
-    private Response process(String accessToken, String financialId, String incomingInteractionId, String authDate, String customerIpAddress, String clientCertificate)
+    private Response process(
+            HttpServletRequest request,
+            String accessToken, String financialId, String incomingInteractionId,
+            String authDate, String customerIpAddress)
     {
-        // Validate the access token. Because this endpoint does not require
-        // any scopes, here we use the simplest variant of validateAccessToken()
-        // methods which does not take 'requiredScopes' argument. See the JavaDoc
-        // of BaseResourceEndpoint (authlete-java-jaxrs) for details.
-        //
         // validateAccessToken() throws a WebApplicationException when the given
         // access token is invalid. The response contained in the exception
         // complies with RFC 6750, so you don't have to build the content of
@@ -85,7 +86,8 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // instance of AccessTokenInfo class. If you want to get information
         // even in the case where validateAccessToken() throws an exception,
         // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), accessToken, null, null, clientCertificate);
+        IntrospectionRequest ireq = createIntrospectionRequest(request, accessToken);
+        validateAccessToken(AuthleteApiFactory.getDefaultApi(), ireq);
 
         // The access token presented by the client application is valid.
 
@@ -127,6 +129,40 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
             logger.severe(e.getMessage());
             return Response.status(Status.BAD_REQUEST).build();
         }
+    }
+
+
+    private IntrospectionRequest createIntrospectionRequest(
+            HttpServletRequest request, String accessToken)
+    {
+        // Resolve the original request URL.
+        URI requestUrl = resolveOriginalRequestUrl(request);
+
+        // htu (the original request URL without parameters)
+        String htu = String.format("%s://%s%s",
+                requestUrl.getScheme(), requestUrl.getAuthority(), requestUrl.getPath());
+
+        // The target URI.
+        URI targetUri = requestUrl;
+
+        return new IntrospectionRequest()
+                .setToken(accessToken)
+                .setClientCertificate(extractClientCertificate(request))
+                .setDpop(request.getHeader("DPoP"))
+                .setHtm("GET")
+                .setHtu(htu)
+                .setHeaders(extractHeadersAsPairs(request))
+                .setTargetUri(targetUri)
+                .setRequestBodyContained(false)
+                ;
+    }
+
+
+    private static URI resolveOriginalRequestUrl(HttpServletRequest request)
+    {
+        String url = new RequestUrlResolver().resolve(request);
+
+        return URI.create(url);
     }
 
 
