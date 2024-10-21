@@ -33,6 +33,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import com.authlete.common.api.AuthleteApiFactory;
 import com.authlete.common.dto.IntrospectionRequest;
+import com.authlete.common.dto.IntrospectionResponse;
 import com.authlete.jaxrs.BaseResourceEndpoint;
 import com.authlete.jaxrs.util.RequestUrlResolver;
 import com.google.gson.Gson;
@@ -79,55 +80,73 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
         // access token is invalid. The response contained in the exception
         // complies with RFC 6750, so you don't have to build the content of
         // WWW-Authenticate header in the error response by yourself.
-        //
-        // If you want to get information about the access token (e.g. the subject
-        // of the user and the scopes associated with the access token), use
-        // the object returned from validateAccessToken() method. It is an
-        // instance of AccessTokenInfo class. If you want to get information
-        // even in the case where validateAccessToken() throws an exception,
-        // call AuthleteApi.introspect(IntrospectionRequest) directly.
-        IntrospectionRequest ireq = createIntrospectionRequest(request, accessToken);
-        validateAccessToken(AuthleteApiFactory.getDefaultApi(), ireq);
+        IntrospectionRequest  ireq = createIntrospectionRequest(request, accessToken);
+        IntrospectionResponse ires = validateAccessToken(AuthleteApiFactory.getDefaultApi(), ireq);
 
         // The access token presented by the client application is valid.
 
         try
         {
-            // log the financial ID
-            if (financialId != null && !financialId.isEmpty())
-            {
-                logger.info("(Legacy) FAPI Financial ID: " + financialId);
-            }
+            // Log the financial ID.
+            logFinancialId(financialId);
 
+            // Compute the outgoing x-fapi-interaction-id.
             String outgoingInteractionId = getInteractionId(incomingInteractionId);
 
-            // log the interaction ID
-            logger.info("FAPI Interaction ID: " + outgoingInteractionId);
+            // Log the interaction ID.
+            logInteractionId(outgoingInteractionId);
 
-            // try parsing the date header if it exists
-            if (authDate != null && !authDate.isEmpty())
-            {
-                // this will throw an exception if the format is wrong
-                format.parse(authDate);
+            // Log the date.
+            logAuthDate(authDate);
 
-                logger.info("Auth date: " + authDate);
-            }
+            // Log the customer IP address.
+            logCustomerIpAddress(customerIpAddress);
 
-            if (customerIpAddress != null && !customerIpAddress.isEmpty())
-            {
-                logger.info("IP Address: " + customerIpAddress);
-            }
-
-            String json = GSON.toJson(new JsonObject());
-
-            return Response.ok(json)
-                    .header("x-fapi-interaction-id", outgoingInteractionId)
-                    .build();
+            // Build an HTTP response.
+            return buildResponse(request, ires, outgoingInteractionId);
         }
         catch (IllegalArgumentException | ParseException e)
         {
             logger.severe(e.getMessage());
             return Response.status(Status.BAD_REQUEST).build();
+        }
+    }
+
+
+    private void logFinancialId(String financialId)
+    {
+        // log the financial ID
+        if (financialId != null && !financialId.isEmpty())
+        {
+            logger.info("(Legacy) FAPI Financial ID: " + financialId);
+        }
+    }
+
+
+    private void logInteractionId(String interactionId)
+    {
+        logger.info("FAPI Interaction ID: " + interactionId);
+    }
+
+
+    private void logCustomerIpAddress(String customerIpAddress)
+    {
+        if (customerIpAddress != null && !customerIpAddress.isEmpty())
+        {
+            logger.info("IP Address: " + customerIpAddress);
+        }
+    }
+
+
+    private void logAuthDate(String authDate) throws ParseException
+    {
+        // try parsing the date header if it exists
+        if (authDate != null && !authDate.isEmpty())
+        {
+            // this will throw an exception if the format is wrong
+            format.parse(authDate);
+
+            logger.info("Auth date: " + authDate);
         }
     }
 
@@ -160,9 +179,8 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
 
     private static URI resolveOriginalRequestUrl(HttpServletRequest request)
     {
-        String url = new RequestUrlResolver().resolve(request);
-
-        return URI.create(url);
+        // The original request URL.
+        return URI.create(new RequestUrlResolver().resolve(request));
     }
 
 
@@ -171,16 +189,28 @@ public class FapiResourceEndpoint extends BaseResourceEndpoint
     {
         if (interactionId != null && !interactionId.isEmpty())
         {
-            // make sure the interaction ID is a UUID; this throws an IllegalArgumentException if it fails
+            // make sure the interaction ID is a UUID;
+            // this throws an IllegalArgumentException if it fails.
             UUID.fromString(interactionId);
 
             return interactionId;
-
         }
         else
         {
             // return a new random UUID if we didn't get one in
             return UUID.randomUUID().toString();
         }
+    }
+
+
+    private Response buildResponse(
+            HttpServletRequest req, IntrospectionResponse ires, String outgoingInteractionId)
+    {
+        // Empty JSON object as the response message body.
+        String json = GSON.toJson(new JsonObject());
+
+        return Response.ok(json)
+                .header("x-fapi-interaction-id", outgoingInteractionId)
+                .build();
     }
 }
