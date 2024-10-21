@@ -32,6 +32,8 @@
         com.authlete.jaxrs.server.api.openbanking.AccountRequestsEndpoint,
         com.authlete.jaxrs.server.api.openbanking.AccountsEndpoint,
         com.authlete.jaxrs.server.api.openbanking.KSAAccountAccessConsentsEndpoint,
+        com.authlete.jaxrs.server.api.rsc.RscJwksEndpoint,
+        com.authlete.jaxrs.server.api.ResourceMetadataEndpoint,
         org.glassfish.jersey.moxy.json.MoxyJsonFeature
       </param-value>
     </init-param>
@@ -50,6 +52,7 @@
   <filter-mapping>
     <filter-name>API</filter-name>
     <url-pattern>/api/*</url-pattern>
+    <url-pattern>/.well-known/oauth-protected-resource</url-pattern>
   </filter-mapping>
 
   <welcome-file-list>

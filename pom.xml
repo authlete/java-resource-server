@@ -20,6 +20,7 @@
     <maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
     <maven.war.plugin.version>2.5</maven.war.plugin.version>
     <nv-i18n.version>1.18</nv-i18n.version>
+    <commons-io.version>2.17.0</commons-io.version>
   </properties>
 
   <profiles>
@@ -85,6 +86,12 @@
       <groupId>com.neovisionaries</groupId>
       <artifactId>nv-i18n</artifactId>
       <version>${nv-i18n.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
     </dependency>
   </dependencies>
 
