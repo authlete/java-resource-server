@@ -64,7 +64,7 @@ public class RscJwksEndpoint
         catch (IOException cause)
         {
             // Write an error log.
-            System.err.format("Failed to load the JWK Set documnet: %s", cause.getMessage());
+            System.err.format("Failed to load the JWK Set documnet: %s%n", cause.getMessage());
             cause.printStackTrace();
 
             // JSON including a simple error message.
