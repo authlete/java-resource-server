@@ -65,7 +65,7 @@ public class ResourceMetadataEndpoint
         URI uri = resolveOriginalRequestUrl(request);
 
         // "resource": The protected resource's Resource Identifier.
-        String resource = String.format("%s://%s", uri.getScheme(), uri.getHost());
+        String resource = String.format("%s://%s", uri.getScheme(), uri.getAuthority());
 
         // "jwks_uri": The URL of the protected resource's JSON Web Key Set document.
         String jwksUri = String.format("%s/api/rsc/jwks", resource);
