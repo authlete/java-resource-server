@@ -21,6 +21,7 @@
     <maven.war.plugin.version>2.5</maven.war.plugin.version>
     <nv-i18n.version>1.18</nv-i18n.version>
     <commons-io.version>2.17.0</commons-io.version>
+    <http-message-signatures.version>1.3</http-message-signatures.version>
   </properties>
 
   <profiles>
@@ -92,6 +93,12 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.authlete</groupId>
+      <artifactId>http-message-signatures</artifactId>
+      <version>${http-message-signatures.version}</version>
     </dependency>
   </dependencies>
 
