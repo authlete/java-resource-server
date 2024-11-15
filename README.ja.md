@@ -225,7 +225,7 @@ Authlete 固有の情報については、[Authlete Definitive Guide][17] の
 [10]: https://openid.net/connect/
 [11]: https://www.authlete.com/
 [12]: https://www.authlete.com/ja/developers/overview/
-[13]: https://login.authlete.com/signup
+[13]: https://console.authlete.com/register
 [14]: https://www.authlete.com/ja/developers/getting_started/
 [15]: http://localhost:8081/
 [16]: https://www.authlete.com/ja/developers/definitive_guide/protected_resource/
