@@ -227,7 +227,7 @@ Contact
 [10]: https://openid.net/connect/
 [11]: https://www.authlete.com/
 [12]: https://www.authlete.com/developers/overview/
-[13]: https://so.authlete.com/accounts/signup
+[13]: https://console.authlete.com/register
 [14]: https://www.authlete.com/developers/getting_started/
 [15]: http://localhost:8081/
 [16]: https://www.authlete.com/developers/definitive_guide/protected_resource/
